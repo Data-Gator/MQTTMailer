@@ -28,12 +28,16 @@ std::string MQTTMail::getTopic(){
  * @param[in]  topic    The topic/destination for the message
  * @param[in]  message  The message in string form
  */
-void MQTTMailer::mailMessage(PubSubClient* mqtt_client, std::string topic, std::string message){
+void MQTTMailer::mailMessage(
+        PubSubClient* mqtt_client, 
+        std::string topic, 
+        std::string message,
+        bool serial_debug){
     bool success = mqtt_client->publish(topic.c_str(), message.c_str());
     if(!success){
        Serial.printf("\tfailed to send %s | %s", topic.c_str(), message.c_str());
     }
-    if(USB_DEBUG) Serial.printf("\t-> sent \'%s\' | \'%s\'\n", topic.c_str(), message.c_str());
+    if(USB_DEBUG && serial_debug) Serial.printf("\t-> sent \'%s\' | \'%s\'\n", topic.c_str(), message.c_str());
 }
 
 /**

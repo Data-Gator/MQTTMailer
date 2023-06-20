@@ -10,7 +10,7 @@
 #ifndef MQTTMAILER_H
 #define MQTTMAILER_H
 
-#include <PubSubClient.h> /*MQTT Interface*/
+#include "PubSubClient.h" /*MQTT Interface*/
 #include <WiFiClientSecure.h>
 #include <ArduinoJson.h>
 #include <BLEAddress.h>
@@ -64,7 +64,12 @@ public:
 		return instance;
 	}
 
-	void mailMessage(PubSubClient* mqtt_client, std::string topic, std::string message);
+	void mailMessage(
+            PubSubClient* mqtt_client, 
+            std::string topic, 
+            std::string message,
+            bool serial_debug=true);
+
 	void reconnect(PubSubClient mqtt_client);
 	std::string buildMessage(std::string* elements, int num_elements);
 
