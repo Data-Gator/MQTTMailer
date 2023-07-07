@@ -35,9 +35,9 @@ void MQTTMailer::mailMessage(
         bool serial_debug){
     bool success = mqtt_client->publish(topic.c_str(), message.c_str());
     if(!success){
-       Serial.printf("\tfailed to send %s | %s", topic.c_str(), message.c_str());
+       this->ard_serial.send_debug(DebugLevel::warning, "failed to send " + topic + " | " + message);
     }
-    if(USB_DEBUG && serial_debug) Serial.printf("\t-> sent \'%s\' | \'%s\'\n", topic.c_str(), message.c_str());
+    if(USB_DEBUG && serial_debug) this->ard_serial.send_debug(DebugLevel::debug, "sent \'"+topic+"\' | \'"+message+"\'");
 }
 
 /**
@@ -48,23 +48,22 @@ void MQTTMailer::mailMessage(
 void MQTTMailer::reconnect(PubSubClient mqtt_client){
 
     while(!mqtt_client.connected()){
-        if(USB_DEBUG) Serial.println("Attempting MQTT connection...");
+        if(USB_DEBUG) this->ard_serial.send_debug(DebugLevel::debug, "Attempting MQTT connection...");
         if(/*mqtt_client.connect("aggregator", "vineyard", "R0b0tslab")*/mqtt_client.connect("aggregator")){
-            if(USB_DEBUG)Serial.println("connected");
+            if(USB_DEBUG) this->ard_serial.send_debug(DebugLevel::success, "connected");
             // TODO: subscribe to topics here
             //mqtt_client.subscribe("topic");
         }else{
             if(USB_DEBUG){
                 if(USB_DEBUG){
-                    Serial.print("\tconnection failed. rc = ");
-                    Serial.println(mqtt_client.state());
+                    this->ard_serial.send_debug(DebugLevel::error, "connection failed. rc = " + to_string(mqtt_client.state()));
                 }
             }
             delay(5000);
         }
     }
 
-    if(USB_DEBUG) Serial.println("MQTT Connection successful...");
+    if(USB_DEBUG) this->ard_serial.send_debug(DebugLevel::success, "MQTT Connection successful...");
 
 }
 
@@ -78,7 +77,7 @@ void MQTTMailer::reconnect(PubSubClient mqtt_client){
  */
 std::string MQTTMailer::buildMessage(std::string* elements, int num_elements){
     if(USB_DEBUG && elements == NULL){
-        Serial.println("[ERROR] cannot build message from NULL reference");
+        this->ard_serial.send_debug(DebugLevel::debug, "cannot build message from NULL reference");
         return "";
     }
 

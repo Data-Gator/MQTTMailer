@@ -15,8 +15,10 @@
 #include <ArduinoJson.h>
 #include <BLEAddress.h>
 #include <esp_gap_ble_api.h>
+#include <ArdentSerial.hpp>
 
-extern const bool USB_DEBUG;
+extern bool USB_DEBUG;
+
 
 /*
  * Packet design for saving data between transmissions
@@ -75,6 +77,7 @@ public:
 
 private:
 	MQTTMailer(){}	
+    ArdentSerial ard_serial;
 };
 
 #endif
