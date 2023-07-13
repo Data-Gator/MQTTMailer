@@ -32,7 +32,9 @@ void MQTTMailer::mailMessage(
         PubSubClient* mqtt_client, 
         std::string topic, 
         std::string message,
-        bool serial_debug){
+        bool serial_debug)
+{
+    this->ard_serial.send_debug(DebugLevel::debug, "mailing to " + topic);
     bool success = mqtt_client->publish(topic.c_str(), message.c_str());
     if(!success){
        this->ard_serial.send_debug(DebugLevel::warning, "failed to send " + topic + " | " + message);
